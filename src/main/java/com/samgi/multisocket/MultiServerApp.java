@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiServerApp {
-    private final static int port = 33334;
+    private static int port;
     // 0~9999 까지는 대부분 프로그램이 사용한다.
     // 그래서 1만번이상 하는게 좋다. 10000 ~ 65534
 
@@ -67,8 +67,19 @@ public class MultiServerApp {
         // 클라이언트 로부터 접속이 되면 클라이언트와 연결할 소켓을 리턴하다. (acceptSocket)
         // 클라이언트와 연결된 소켓으로 읽거나 쓴다. 읽을때는 동기상태 (블로킹)
 
-        MultiServerApp sa = new MultiServerApp();
-        sa.doNetworking();
+        try{
+            if (args.length != 1){
+                System.out.println("에러 : 포트(숫자)를 입력하세요");
+            } else {
+                Integer port = Integer.parseInt(args[0]);
+                MultiServerApp sa = new MultiServerApp();
+                sa.doNetworking(port);
+            }
+        } catch (NumberFormatException ex) {
+            System.out.println("에러 : 포트(숫자)를 입력하세요");
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     public void init() throws IOException {
@@ -79,9 +90,9 @@ public class MultiServerApp {
         this.multiClientSocketList = new ArrayList<>();
     }
 
-    public void doNetworking() {
+    public void doNetworking(Integer port) {
         try {
-            this.serverSocket = new ServerSocket(port);
+            this.serverSocket = new ServerSocket(MultiServerApp.port);
             this.init();
 
             AcceptClientSocketThread acst = new AcceptClientSocketThread();

@@ -6,14 +6,19 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class MultiClientApp {
-    private final static int port = 33334;
+    private static int port;
 //    private final static String serverIp = "127.0.0.1";
-    private final static String serverIp = "192.168.0.10";
+    private static String serverIp;
 
     private Socket clientSocket = null;
     private BufferedWriter socketWriter = null;
     private BufferedReader socketReader = null;
     private BufferedReader keyboardReader = null;
+
+    public MultiClientApp (String serverIp, Integer port){
+        this.serverIp = serverIp;
+        this.port = port;
+    }
 
     public static void main(String[] args) {
         // 클라이언트 소켓을 만든다. (IP주소, 포트번호) (clientSocket)
@@ -21,8 +26,20 @@ public class MultiClientApp {
         // 서버와 연결된 클라이언트 소켓으로 읽거나 쓴다.
         // 읽을때는 동기상태 (블로킹)
 
-        MultiClientApp ca = new MultiClientApp();
-        ca.doNetworking();
+        try {
+            if (args.length != 2) {
+                System.out.println("에러 : IP주소와 포트(숫자)를 입력하세요1");
+            } else {
+                String serverIp = args[0];
+                Integer port = Integer.parseInt(args[1]);
+                MultiClientApp ca = new MultiClientApp(serverIp, port);
+                ca.doNetworking();
+            }
+        } catch (NumberFormatException ex) {
+            System.out.println("에러 : IP주소와 포트(숫자)를 입력하세요");
+        } catch (Exception ex) {
+            System.out.println(ex.toString());
+        }
     }
 
     public void init() throws IOException {
@@ -133,4 +150,4 @@ public class MultiClientApp {
 }
 
 // javac -d . MultiClientApp.java
-// java -cp . com.softagape.multisocket.MultiClientApp
+// java -cp . com.samgi.multisocket.MultiClientApp
