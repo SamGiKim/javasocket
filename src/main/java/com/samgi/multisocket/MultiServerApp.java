@@ -205,5 +205,6 @@ public class MultiServerApp {
     }
 }
 
+// cd src/main/java/com/samgi/multisocket
 // javac -d . MultiServerApp.java
-// java -cp . com.softagape.multisocket.MultiServerApp
+// java -cp . com.samgi.multisocket.MultiServerApp
